@@ -1,4 +1,5 @@
 import re
+import math
 
 class Err(str):
     pass
@@ -44,7 +45,8 @@ class Stack():
             elif idx == 1: reg = ' y'
             else: reg = str(idx - 1)
             if len(reg) < 2: reg = ' ' + reg
-            labelstack.append(reg + ': ' + '%010.4f' % num)
+            if num >= 0: labelstack.append(reg + ':  ' + '%010.4f' % num)
+            else: labelstack.append(reg + ': ' + '%011.4f' % num)
         return '\n'.join(labelstack[::-1])
     def __len__(self):
         return len(self.list)
@@ -53,10 +55,16 @@ class RPN():
     def __init__(self):
         self.stack = Stack()
         self.regtable = {}
+    def setdefault(self):
+        self.angle = 'deg'
 
     def cmd_util(self):
         while True:
-            print('%010.4f > ' % float(self.stack['x']), end = '')
+            if self.stack['x'] >= 0:
+                number = ' %010.4f' % float(self.stack['x'])
+            else:
+                number = '%011.4f' % float(self.stack['x'])
+            print(number + ' > ', end='')
             ret = self.exe(input())
             if isinstance(ret, Err) or isinstance(ret, Info):
                 print(ret)
@@ -79,9 +87,20 @@ class RPN():
                 self.stack.drop(lambda x, y: y * x)
             elif re.search('^(d|div|divide|\/)$', ln[i]):
                 self.stack.drop(lambda x, y: y / x)
-        # Quit
             elif re.search('^(q|quit|exit)$', ln[i]):
                 exit(0)
+
+            elif ln[i] == 'ceil':
+                self.stack.change(lambda x: math.ceil(x))
+            elif ln[i] == 'floor':
+                self.stack.change(lambda x: math.floor(x))
+            elif ln[i] == 'abs':
+                self.stack.change(lambda x: math.fabs(x))
+            elif ln[i] == 'factorial':
+                self.stack.change(lambda x: math.factorial(x))
+
+            elif ln[i] == 'mod':
+                self.stack.drop(lambda x, y: math.fmod(y, x))
         # Print
             elif ln[i] == 'print':
                 return Info(self.stack)
@@ -99,7 +118,7 @@ class RPN():
                 i += 1
 
     ### Number
-            elif re.search('^\d*\.?\d*$', ln[i]):
+            elif re.search('^-?\d*\.?\d*$', ln[i]):
                 self.stack.push(float(ln[i]))
             else:
                 return Err('invalid command')
