@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 import re
 import math
+import sys
 
 class Err(str):
     pass
@@ -31,23 +33,21 @@ class Stack():
         elif key == 'y': idx = 1
         else: idx = key + 1
         if (idx == 0 and len(self) < 1) or (idx == 1 and len(self) < 2):
-            return 0
+            return float(0)
         if idx > len(self): raise IndexError('Index out of stack range')
         return self.list[idx]
-    def __repr__(self):
-        retval = ''
+    def gettable(self):
         stack = list(self.list)
         while len(stack) < 2:
-            stack.append(0)
+            stack.append(float(0))
         labelstack = []
         for idx, num in enumerate(stack):
             if idx == 0: reg = ' x'
             elif idx == 1: reg = ' y'
             else: reg = str(idx - 1)
             if len(reg) < 2: reg = ' ' + reg
-            if num >= 0: labelstack.append(reg + ':  ' + '%010.4f' % num)
-            else: labelstack.append(reg + ': ' + '%011.4f' % num)
-        return '\n'.join(labelstack[::-1])
+            labelstack.append([reg, num])
+        return labelstack[::-1]
     def __len__(self):
         return len(self.list)
             
@@ -60,72 +60,81 @@ class RPN():
 
     def cmd_util(self):
         while True:
-            if self.stack['x'] >= 0:
-                number = ' %010.4f' % float(self.stack['x'])
-            else:
-                number = '%011.4f' % float(self.stack['x'])
-            print(number + ' > ', end='')
+            print('\x1b[2m x: \x1b[0m' + self.prettify(self.stack['x']) + ' > ', end='')
             ret = self.exe(input())
             if isinstance(ret, Err) or isinstance(ret, Info):
                 print(ret)
+
+    def prettify(self, num):
+        if num >= 0:
+            number = ' %015.4f' % float(num)
+        else:
+            number = '%016.4f' % float(num)
+        sign = number[0]
+        formated = [ch for ch in number[1:]]
+        for idx, ch in enumerate(formated):
+            if ch == '0': formated[idx] = '\x1b[2m0\x1b[0m'
+            else: break
+        formated = formated[::-1]
+        for idx, ch in enumerate(formated):
+            if ch == '0': formated[idx] = '\x1b[2m0\x1b[0m'
+            else: break
+        formated = formated[::-1]
+        if num.is_integer():
+            for idx, ch in enumerate(formated):
+                if ch == '.': formated[idx] = '\x1b[2m.\x1b[0m'
+            
+        return sign + ''.join(formated)
 
     def exe(self, raw):
         if raw == '':
             return
 
-        i = 0
-        ln = raw.split(' ')
-        while i < len(ln):
+        ln = iter(raw.split(' '))
+        for cmd in ln:
+            if re.search('^-?\d*\.?\d*$', cmd):
+                self.stack.push(float(cmd))
 
-    ### Zero arg cmds
-        # Arithmetic
-            if re.search('^(a|add|\+)$', ln[i]):
+            elif cmd in ['+', 'a', 'add', 'plus']:
                 self.stack.drop(lambda x, y: y + x)
-            elif re.search('^(s|sub|subtact|\-)$', ln[i]):
+            elif cmd in ['-', 's', 'sub', 'subtact', 'minus']:
                 self.stack.drop(lambda x, y: y - x)
-            elif re.search('^(f|m|mul|multiply|\*)$', ln[i]):
+            elif cmd in ['*', 'm', 'mul', 'multiply', 'times']:
                 self.stack.drop(lambda x, y: y * x)
-            elif re.search('^(d|div|divide|\/)$', ln[i]):
+            elif cmd in ['/', 'd', 'div', 'divide', 'over']:
                 self.stack.drop(lambda x, y: y / x)
-            elif re.search('^(q|quit|exit)$', ln[i]):
+            elif cmd in ['q', 'quit', 'exit']:
                 exit(0)
 
-            elif ln[i] == 'ceil':
+            elif cmd == 'ceil':
                 self.stack.change(lambda x: math.ceil(x))
-            elif ln[i] == 'floor':
+            elif cmd == 'floor':
                 self.stack.change(lambda x: math.floor(x))
-            elif ln[i] == 'abs':
+            elif cmd == 'abs':
                 self.stack.change(lambda x: math.fabs(x))
-            elif ln[i] == 'factorial':
+            elif cmd == 'factorial':
                 self.stack.change(lambda x: math.factorial(x))
-
-            elif ln[i] == 'mod':
+            elif cmd == 'mod':
                 self.stack.drop(lambda x, y: math.fmod(y, x))
-        # Print
-            elif ln[i] == 'print':
-                return Info(self.stack)
-    ### One arg cmds
-            elif ln[i] in ['sto', 'rcl']:
-            # STO
-                if i + 1 > len(ln):
-                    return Err(ln[i] + ' requires exaclyt one argument')
-                if ln[i] == 'sto':
-                    self.regtable[ln[i + 1]] = self.stack['x']
-            # RCL
-                elif ln[i] == 'rcl':
-                    self.stack.push(self.regtable[ln[i + 1]])
+            elif cmd in ['print', 'ls', 'p']:
+                for item in self.stack.gettable():
+                    print(item[0] + ': ' + self.prettify(item[1]))
 
-                i += 1
+            # one argument functions
+            elif cmd == 'sto':
+                self.regtable[next(ln)] = self.stack['x']
+            elif cmd == 'rcl':
+                self.stack.push(self.regtable[next(ln)])
 
-    ### Number
-            elif re.search('^-?\d*\.?\d*$', ln[i]):
-                self.stack.push(float(ln[i]))
             else:
                 return Err('invalid command')
-            i += 1
 
-        return self.stack['x']
+        return int(self.stack['x']) if self.stack['x'].is_integer() else self.stack['x']
+
             
 if __name__ == "__main__":
     rpn = RPN()
-    rpn.cmd_util()
+    if len(sys.argv) > 1:
+        print(rpn.exe(' '.join(sys.argv[1:])))
+    else:
+        rpn.cmd_util()
