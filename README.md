@@ -41,3 +41,43 @@ Funcions that pushes something into the stack.
 |Roll up|'rlu', 'rollu', 'rollup'|Rolls the stack up|
 |Store|'sto', 'store'|Takes one argument that sets the storage location|
 |Recall|'rcl', 'recall'|Pushes the numbes stored in a argument position|
+
+### Stack drop
+
+Functions that pops off the *x* and *y* buffers and pushes the product based on the function.
+
+|Operation|Syntax|Description|
+|---|---|---|
+|Add|'+', 'a', 'add', 'plus'||
+|Subtract|'-', 's', 'sub', 'subtact', 'minus'|
+|Muliply|`*`, 'm', 'mul', 'multiply', 'times'||
+|Divide|'/', ':', 'd', 'div', 'divide', 'over'||
+|Power|'^', `**`, 'pow', 'raised', 'expo', 'exponent'||
+|Modulus|'mod', 'modulus'||
+|Greatest common divider|'gcd'||
+|Logarithm|'log', 'logarithm'|The *x* buffer is the base|
+|Root|'root'|The *x* buffer is the root|
+
+### *x* buffer change
+
+Funcions that takes what is stored in the *x* buffer and changes it. Trigonometric funcions returns number in radians.
+
+|Ceil|'cel', 'ceil'||
+|Floor|'flr','floor'||
+|Round|'rnd', 'round'|Rounds to nearest ingeger|
+|Invert|'inv', 'inverse', 'invert'|1 / x|
+|Absolute value|'abs', 'absolute'||
+|Factorial|'fac', 'factorial'||
+|Change sign|'chs', 'changesign', 'chsign'|-x|
+|Log base 10|'log10'||
+|Log base 2|'log2'||
+|Log base e|'ln', 'naturallogarithm'||
+|Squareroot|'sqrt', 'squareroot'||
+|Sine|'sin', 'sine'||
+|Cosine|'cos', 'cosine'||
+|Tangent|'tan', 'tangent'||
+|Cosecant|'asin', 'arcsin', 'cosecant'||
+|Secant|'acos', 'arccos', 'secant'||
+|Cotangent|'atan', 'arctan', 'cotangent'||
+|Convert to degrees|'deg', 'todeg', 'degrees'||
+|Convert to radians|'rad', 'torad', 'radians'||
