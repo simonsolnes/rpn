@@ -15,8 +15,12 @@ The program takes inputs that are separated by space (or return in interactive m
 ## Functions
 
 ### Stack pushes
+
+Funcions that pushes something into the stack.
+
 |Name|syntax|Desrciption|
 |---|---|---|
-|test3|tsr|rftft|
-|test3|tsr|rftft|
-|test3|tsr|rftft|
+|Number|*number*|Will push a number into the stack|
+|Rand|`rand`, `random`|Random number between 0 and 1|
+|π|`pi`||
+|Euler's number|`e`||
