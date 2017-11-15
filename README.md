@@ -29,18 +29,18 @@ Funcions that pushes something into the stack.
 
 |Operation|Syntax|Description|
 |---|---|---|
-|Quit|'q', 'quit', 'exit'|Quits the program|
-|Print|'print', 'ls', 'p'|Prints the stack|
+|Quit|`q`, `quit`, `exit`|Quits the program|
+|Print|`print`, `ls`, `p`|Prints the stack|
 
 ### Stack manipulation and memory
 
 |Operation|Syntax|Description|
 |---|---|---|
 |Swap|`swp`, `<>`, `><`, `swap`| Swaps the *x* and *y* buffer|
-|Roll down|'rld', 'roll', 'rolld', 'rolldown'|Rolls the stack down|
-|Roll up|'rlu', 'rollu', 'rollup'|Rolls the stack up|
-|Store|'sto', 'store'|Takes one argument that sets the storage location|
-|Recall|'rcl', 'recall'|Pushes the numbes stored in a argument position|
+|Roll down|`rld`, `roll`, `rolld`, `rolldown`|Rolls the stack down|
+|Roll up|`rlu`, `rollu`, `rollup`|Rolls the stack up|
+|Store|`sto`, `store`|Takes one argument that sets the storage location|
+|Recall|`rcl`, `recall`|Pushes the numbes stored in a argument position|
 
 ### Stack drop
 
@@ -48,15 +48,15 @@ Functions that pops off the *x* and *y* buffers and pushes the product based on 
 
 |Operation|Syntax|Description|
 |---|---|---|
-|Add|'+', 'a', 'add', 'plus'||
-|Subtract|'-', 's', 'sub', 'subtact', 'minus'|
-|Muliply|`*`, 'm', 'mul', 'multiply', 'times'||
-|Divide|'/', ':', 'd', 'div', 'divide', 'over'||
-|Power|'^', `**`, 'pow', 'raised', 'expo', 'exponent'||
-|Modulus|'mod', 'modulus'||
-|Greatest common divider|'gcd'||
-|Logarithm|'log', 'logarithm'|The *x* buffer is the base|
-|Root|'root'|The *x* buffer is the root|
+|Add|`+`, `a`, `add`, `plus`||
+|Subtract|`-`, `s`, `sub`, `subtact`, `minus`|
+|Muliply|`*`, `m`, `mul`, `multiply`, `times`||
+|Divide|`/`, `:`, `d`, `div`, `divide`, `over`||
+|Power|`^`, `**`, `pow`, `raised`, `expo`, `exponent`||
+|Modulus|`mod`, `modulus`||
+|Greatest common divider|`gcd`||
+|Logarithm|`log`, `logarithm`|The *x* buffer is the base|
+|Root|`root`|The *x* buffer is the root|
 
 ### *x* buffer change
 
@@ -64,22 +64,22 @@ Funcions that takes what is stored in the *x* buffer and changes it. Trigonometr
 
 |Operation|Syntax|Description|
 |---|---|---|
-|Ceil|'cel', 'ceil'||
-|Floor|'flr','floor'||
-|Round|'rnd', 'round'|Rounds to nearest ingeger|
-|Invert|'inv', 'inverse', 'invert'|1 / x|
-|Absolute value|'abs', 'absolute'||
-|Factorial|'fac', 'factorial'||
-|Change sign|'chs', 'changesign', 'chsign'|-x|
-|Log base 10|'log10'||
-|Log base 2|'log2'||
-|Log base e|'ln', 'naturallogarithm'||
-|Squareroot|'sqrt', 'squareroot'||
-|Sine|'sin', 'sine'||
-|Cosine|'cos', 'cosine'||
-|Tangent|'tan', 'tangent'||
-|Cosecant|'asin', 'arcsin', 'cosecant'||
-|Secant|'acos', 'arccos', 'secant'||
-|Cotangent|'atan', 'arctan', 'cotangent'||
-|Convert to degrees|'deg', 'todeg', 'degrees'||
-|Convert to radians|'rad', 'torad', 'radians'||
+|Ceil|`cel`, `ceil`||
+|Floor|`flr`,`floor`||
+|Round|`rnd`, `round`|Rounds to nearest ingeger|
+|Invert|`inv`, `inverse`, `invert`|1 / x|
+|Absolute value|`abs`, `absolute`||
+|Factorial|`fac`, `factorial`||
+|Change sign|`chs`, `changesign`, `chsign`|-x|
+|Log base 10|`log10`||
+|Log base 2|`log2`||
+|Log base e|`ln`, `naturallogarithm`||
+|Squareroot|`sqrt`, `squareroot`||
+|Sine|`sin`, `sine`||
+|Cosine|`cos`, `cosine`||
+|Tangent|`tan`, `tangent`||
+|Cosecant|`asin`, `arcsin`, `cosecant`||
+|Secant|`acos`, `arccos`, `secant`||
+|Cotangent|`atan`, `arctan`, `cotangent`||
+|Convert to degrees|`deg`, `todeg`, `degrees`||
+|Convert to radians|`rad`, `torad`, `radians`||
