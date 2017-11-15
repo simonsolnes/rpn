@@ -18,9 +18,26 @@ The program takes inputs that are separated by space (or return in interactive m
 
 Funcions that pushes something into the stack.
 
-|Name|syntax|Desrciption|
+|Operation|Syntax|Description|
 |---|---|---|
 |Number|*number*|Will push a number into the stack|
 |Rand|`rand`, `random`|Random number between 0 and 1|
 |π|`pi`||
 |Euler's number|`e`||
+
+### System funcions
+
+|Operation|Syntax|Description|
+|---|---|---|
+|Quit|'q', 'quit', 'exit'|Quits the program|
+|Print|'print', 'ls', 'p'|Prints the stack|
+
+### Stack manipulation and memory
+
+|Operation|Syntax|Description|
+|---|---|---|
+|Swap|`swp`, `<>`, `><`, `swap`| Swaps the *x* and *y* buffer|
+|Roll down|'rld', 'roll', 'rolld', 'rolldown'|Rolls the stack down|
+|Roll up|'rlu', 'rollu', 'rollup'|Rolls the stack up|
+|Store|'sto', 'store'|Takes one argument that sets the storage location|
+|Recall|'rcl', 'recall'|Pushes the numbes stored in a argument position|
