@@ -62,6 +62,8 @@ Functions that pops off the *x* and *y* buffers and pushes the product based on 
 
 Funcions that takes what is stored in the *x* buffer and changes it. Trigonometric funcions returns number in radians.
 
+|Operation|Syntax|Description|
+|---|---|---|
 |Ceil|'cel', 'ceil'||
 |Floor|'flr','floor'||
 |Round|'rnd', 'round'|Rounds to nearest ingeger|
