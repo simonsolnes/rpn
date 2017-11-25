@@ -4,27 +4,28 @@ import math
 import sys
 import random
 
-class Err(str):
-    pass
-
-class Info(str):
-    pass
-    
 class Stack():
     def __init__(self):
         self.list = []
     def push(self, item):
+        if len(self.list) < 1 and item == 0:
+            return
         self.list.insert(0, item)
     def pop(self):
         if not self:
-            return 0
+            return float(0)
         retval = self.list[0]
         self.list = self.list[1:]
         return retval
     def drop(self, func):
         x = self.pop()
         y = self.pop()
-        self.push(func(x, y))
+        try:
+            self.push(func(x, y))
+        except Exception as e:
+            print(e)
+            self.push(x)
+            self.push(y)
     def change(self, func):
         self.push(func(self.pop()))
     def __getitem__(self, key):
@@ -36,7 +37,7 @@ class Stack():
         if (idx == 0 and len(self) < 1) or (idx == 1 and len(self) < 2):
             return float(0)
         if idx > len(self): raise IndexError('Index out of stack range')
-        return self.list[idx]
+        return float(self.list[idx])
     def __setitem__(self, key, value):
         if type(key) == slice: raise IndexError('No stack slicing')
         if key == 0: raise IndexError('There exsist no index 0')
@@ -62,6 +63,9 @@ class Stack():
     def roll(self, direction = 0):
         if len(self.list) < 1:
             return
+
+        if len(self.list) == 1:
+            self.list.append(float(0))
         if direction == 0:
             self.list = self.list[1:] + self.list[:1]
         elif direction == 1:
@@ -77,11 +81,14 @@ class RPN():
         self.angle = 'deg'
 
     def cmd_util(self):
+        printx = True
         while True:
-            print('\x1b[2m x: \x1b[0m' + self.prettify(self.stack['x']) + ' > ', end='')
-            ret = self.exe(input())
-            if isinstance(ret, Err) or isinstance(ret, Info):
-                print(ret)
+            if printx:
+                print('\x1b[2m x: \x1b[0m' + self.prettify(self.stack['x']))
+            try:
+                ret, printx = self.exe(input(' > '))
+            except Exception as e:
+                print(e)
 
     def prettify(self, num):
         if num >= 0:
@@ -105,29 +112,23 @@ class RPN():
         return sign + ''.join(formated)
 
     def exe(self, raw):
-        if raw == '':
-            return
-
-        '''
-        standard deviation
-        pack (for copyable output)
-        '''
-
         ln = iter(raw.split(' '))
         for cmd in ln:
-            if re.search('^-?\d*\.?\d*$', cmd):
+            printx = True
+
+            if re.search('^-?(\d+\.?\d*|\.\d+)$', cmd):
                 self.stack.push(float(cmd))
 
             # drop
-            elif cmd in ['+', 'a', 'add', 'plus']:
+            elif cmd in ['a', '+', 'add', 'plus']:
                 self.stack.drop(lambda x, y: y + x)
-            elif cmd in ['-', 's', 'sub', 'subtact', 'minus']:
+            elif cmd in ['s', '+', 'sub', 'subtact', 'minus']:
                 self.stack.drop(lambda x, y: y - x)
-            elif cmd in ['*', 'm', 'mul', 'multiply', 'times']:
+            elif cmd in ['m', '*', 'mul', 'multiply', 'times']:
                 self.stack.drop(lambda x, y: y * x)
-            elif cmd in ['/', ':', 'd', 'div', 'divide', 'over']:
+            elif cmd in ['d', '/', ':', 'div', 'divide', 'over']:
                 self.stack.drop(lambda x, y: y / x)
-            elif cmd in ['^', '**', 'pow', 'raised', 'expo', 'exponent']:
+            elif cmd in ['p', '^', '**', 'pow', 'raised', 'expo', 'exponent']:
                 self.stack.drop(lambda x, y: math.pow(y, x))
             elif cmd in ['mod', 'modulus']:
                 self.stack.drop(lambda x, y: math.fmod(y, x))
@@ -135,7 +136,7 @@ class RPN():
                 self.stack.drop(lambda x, y: math.gcd(y, x))
             elif cmd in ['log', 'logarithm']:
                 self.stack.drop(lambda x, y: math.log(y, x))
-            elif cmd in ['root']:
+            elif cmd in ['r', 'root']:
                 self.stack.drop(lambda x, y: math.pow(y, 1/x))
 
             # change
@@ -189,28 +190,32 @@ class RPN():
             # system
             elif cmd in ['q', 'quit', 'exit']:
                 exit(0)
-            elif cmd in ['print', 'ls', 'p']:
-                print()
+            elif cmd in ['print', 'ls']:
                 for item in self.stack.gettable():
                     print(item[0] + ': ' + self.prettify(item[1]))
+                printx = False
 
             # functions
-            elif cmd == ['sto', 'store']:
-                self.regtable[next(ln)] = self.stack['x']
-            elif cmd == ['rcl', 'recall']:
-                self.stack.push(self.regtable[next(ln)])
             elif cmd == ['swp', '<>', '><', 'swap']:
                 self.stack['x'], self.stack['y'] = self.stack['y'], self.stack['x']
             elif cmd in ['rld', 'roll', 'rolld', 'rolldown']:
                 self.stack.roll()
             elif cmd in ['rlu', 'rollu', 'rollup']:
                 self.stack.roll(1)
+            elif cmd == ['sto', 'store']:
+                self.regtable[next(ln)] = self.stack['x']
+            elif cmd == ['rcl', 'recall']:
+                self.stack.push(self.regtable[next(ln)])
+            elif cmd in ['clr', 'clear', 'clean', 'erase']:
+                self.stack = Stack()
 
+            elif cmd == '':
+                pass
             else:
-                return Err('invalid command')
+                
+                raise Exception('invalid command')
 
-        return int(self.stack['x']) if self.stack['x'].is_integer() else self.stack['x']
-
+        return int(self.stack['x']) if self.stack['x'].is_integer() else self.stack['x'], printx
             
 if __name__ == "__main__":
     rpn = RPN()
@@ -224,4 +229,3 @@ if __name__ == "__main__":
             for item in rpn.stack.gettable():
                 print(item[0] + ': ' + rpn.prettify(item[1]))
             exit()
-            

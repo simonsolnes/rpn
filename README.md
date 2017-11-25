@@ -30,7 +30,7 @@ Funcions that pushes something into the stack.
 |Operation|Syntax|Description|
 |---|---|---|
 |Quit|`q`, `quit`, `exit`|Quits the program|
-|Print|`print`, `ls`, `p`|Prints the stack|
+|Print|`print`, `ls`|Prints the stack|
 
 ### Stack manipulation and memory
 
@@ -48,15 +48,15 @@ Functions that pops off the *x* and *y* buffers and pushes the product based on 
 
 |Operation|Syntax|Description|
 |---|---|---|
-|Add|`+`, `a`, `add`, `plus`||
-|Subtract|`-`, `s`, `sub`, `subtact`, `minus`|
-|Muliply|`*`, `m`, `mul`, `multiply`, `times`||
-|Divide|`/`, `:`, `d`, `div`, `divide`, `over`||
-|Power|`^`, `**`, `pow`, `raised`, `expo`, `exponent`||
+|Add|`a`, `+`, `add`, `plus`||
+|Subtract|`s`, `-`, `sub`, `subtact`, `minus`|
+|Muliply|`m`, `*`, `mul`, `multiply`, `times`||
+|Divide|`d`, `/`, `:`, `div`, `divide`, `over`||
+|Power|`p`, `^`, `**`, `pow`, `raised`, `expo`, `exponent`||
 |Modulus|`mod`, `modulus`||
 |Greatest common divider|`gcd`||
 |Logarithm|`log`, `logarithm`|The *x* buffer is the base|
-|Root|`root`|The *x* buffer is the root|
+|Root|`r`, `root`|The *x* buffer is the root|
 
 ### *x* buffer change
 
