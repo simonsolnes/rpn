@@ -80,42 +80,9 @@ class RPN():
     def setdefault(self):
         self.angle = 'deg'
 
-    def cmd_util(self):
-        printx = True
-        while True:
-            if printx:
-                print('\x1b[2m x: \x1b[0m' + self.prettify(self.stack['x']))
-            try:
-                ret, printx = self.exe(input(' > '))
-            except Exception as e:
-                print(e)
-
-    def prettify(self, num):
-        if num >= 0:
-            number = ' %015.4f' % float(num)
-        else:
-            number = '%016.4f' % float(num)
-        sign = number[0]
-        formated = [ch for ch in number[1:]]
-        for idx, ch in enumerate(formated):
-            if ch == '0': formated[idx] = '\x1b[2m0\x1b[0m'
-            else: break
-        formated = formated[::-1]
-        for idx, ch in enumerate(formated):
-            if ch == '0': formated[idx] = '\x1b[2m0\x1b[0m'
-            else: break
-        formated = formated[::-1]
-        if num.is_integer():
-            for idx, ch in enumerate(formated):
-                if ch == '.': formated[idx] = '\x1b[2m.\x1b[0m'
-            
-        return sign + ''.join(formated)
-
     def exe(self, raw):
         ln = iter(raw.split(' '))
         for cmd in ln:
-            printx = True
-
             if re.search('^-?(\d+\.?\d*|\.\d+)$', cmd):
                 self.stack.push(float(cmd))
 
@@ -124,7 +91,7 @@ class RPN():
                 self.stack.drop(lambda x, y: y + x)
             elif cmd in ['s', '+', 'sub', 'subtact', 'minus']:
                 self.stack.drop(lambda x, y: y - x)
-            elif cmd in ['m', '*', 'mul', 'multiply', 'times']:
+            elif cmd in ['m', '*', 'mul', 'multiply', 'times']: # * doesn't work
                 self.stack.drop(lambda x, y: y * x)
             elif cmd in ['d', '/', ':', 'div', 'divide', 'over']:
                 self.stack.drop(lambda x, y: y / x)
@@ -192,8 +159,7 @@ class RPN():
                 exit(0)
             elif cmd in ['print', 'ls']:
                 for item in self.stack.gettable():
-                    print(item[0] + ': ' + self.prettify(item[1]))
-                printx = False
+                    print(item[0] + ': ' + InteractiveMode().prettify(item[1]))
 
             # functions
             elif cmd == ['swp', '<>', '><', 'swap']:
@@ -215,17 +181,93 @@ class RPN():
                 
                 raise Exception('invalid command')
 
-        return int(self.stack['x']) if self.stack['x'].is_integer() else self.stack['x'], printx
+        return int(self.stack['x']) if self.stack['x'].is_integer() else self.stack['x']
+
+class InteractiveMode():
+    def __init__(self):
+        self.rpn = RPN()
+
+    def run(self):
+        while True:
+            print('\x1b[2m x: \x1b[0m' + self.prettify(self.rpn.stack['x']))
+            try:
+                ret = self.rpn.exe(input(' > '))
+            except Exception as e:
+                print(e)
+            except KeyboardInterrupt:
+                print()
+                for item in self.rpn.stack.gettable():
+                    print(item[0] + ': ' + self.prettify(item[1]))
+                exit()
+    def run2(self):
+        try:
+            import sys, tty, termios
+        except ImportError:
+            try:
+                import msvcrt
+            except ImportError:
+                raise ImportError('getch not available')
+            else:
+                getch = msvcrt.getch
+        else:
+            def getch():
+                fd = sys.stdin.fileno()
+                old_settings = termios.tcgetattr(fd)
+                try:
+                    tty.setraw(fd)
+                    ch = sys.stdin.read(1)
+                finally:
+                    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+                return ch
+
+        def keypress(key):
+            if ord(key) == 13: #enter
+                print(end='\r')
+                try:
+                    self.rpn.exe(self.buffer)
+                except Exception as e:
+                    print(e)
+                finally:
+                    print(' ' + self.prettify(self.rpn.stack['x']), end='\r')
+                    self.buffer = ''
+            else:
+                if ord(key) == 3: # ^C
+                    print()
+                    exit()
+                elif ord(key) == 127: # backspace
+                    self.buffer = self.buffer[:-1]
+                else:
+                    self.buffer += key
+                print(' ' * 80 + '\r ' + self.buffer, end='\r')
+
+        self.buffer = ''
+        print(' ' + self.prettify(self.rpn.stack['x']), end='\r')
+        while True:
+            keypress(getch())
+
+    def prettify(self, num):
+        if num >= 0:
+            number = ' %015.4f' % float(num)
+        else:
+            number = '%016.4f' % float(num)
+        sign = number[0]
+        formated = [ch for ch in number[1:]]
+        for idx, ch in enumerate(formated):
+            if ch == '0': formated[idx] = '\x1b[2m0\x1b[0m'
+            else: break
+        formated = formated[::-1]
+        for idx, ch in enumerate(formated):
+            if ch == '0': formated[idx] = '\x1b[2m0\x1b[0m'
+            else: break
+        formated = formated[::-1]
+        if num.is_integer():
+            for idx, ch in enumerate(formated):
+                if ch == '.': formated[idx] = '\x1b[2m.\x1b[0m'
+            
+        return sign + ''.join(formated)
             
 if __name__ == "__main__":
-    rpn = RPN()
     if len(sys.argv) > 1:
-        print(rpn.exe(' '.join(sys.argv[1:])))
+        print(RPN().exe(' '.join(sys.argv[1:])))
     else:
-        try:
-            rpn.cmd_util()
-        except KeyboardInterrupt:
-            print()
-            for item in rpn.stack.gettable():
-                print(item[0] + ': ' + rpn.prettify(item[1]))
-            exit()
+        InteractiveMode().run()
