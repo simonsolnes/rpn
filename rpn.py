@@ -89,7 +89,7 @@ class RPN():
             # drop
             elif cmd in ['a', '+', 'add', 'plus']:
                 self.stack.drop(lambda x, y: y + x)
-            elif cmd in ['s', '+', 'sub', 'subtact', 'minus']:
+            elif cmd in ['s', '-', 'sub', 'subtact', 'minus']:
                 self.stack.drop(lambda x, y: y - x)
             elif cmd in ['m', '*', 'mul', 'multiply', 'times']: # * doesn't work
                 self.stack.drop(lambda x, y: y * x)
