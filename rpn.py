@@ -162,20 +162,20 @@ class RPN():
                     print(item[0] + ': ' + InteractiveMode().prettify(item[1]))
 
             # functions
-            elif cmd == ['swp', '<>', '><', 'swap']:
+            elif cmd in ['swp', '<>', '><', 'swap']:
                 self.stack['x'], self.stack['y'] = self.stack['y'], self.stack['x']
             elif cmd in ['rld', 'roll', 'rolld', 'rolldown']:
                 self.stack.roll()
             elif cmd in ['rlu', 'rollu', 'rollup']:
                 self.stack.roll(1)
-            elif cmd == ['sto', 'store']:
+            elif cmd in ['sto', 'store']:
                 self.regtable[next(ln)] = self.stack['x']
-            elif cmd == ['rcl', 'recall']:
+            elif cmd in ['rcl', 'recall']:
                 self.stack.push(self.regtable[next(ln)])
             elif cmd in ['clr', 'clear', 'clean', 'erase']:
                 self.stack = Stack()
 
-            elif cmd == '':
+            elif cmd in '':
                 pass
             else:
                 
