@@ -4,6 +4,9 @@ import math
 import sys
 import random
 
+show_full_stack=False
+showed_stack=False
+
 class Stack():
     def __init__(self):
         self.list = []
@@ -81,6 +84,7 @@ class RPN():
         self.angle = 'deg'
 
     def exe(self, raw):
+        global showed_stack, show_full_stack
         ln = iter(raw.split(' '))
         for cmd in ln:
             if re.search('^-?(\d+\.?\d*|\.\d+)$', cmd):
@@ -160,6 +164,9 @@ class RPN():
             elif cmd in ['print', 'ls']:
                 for item in self.stack.gettable():
                     print(item[0] + ': ' + InteractiveMode().prettify(item[1]))
+                    showed_stack=1
+            elif cmd in ['ss', 'ts']:
+                show_full_stack = not show_full_stack
 
             # functions
             elif cmd in ['swp', '<>', '><', 'swap']:
@@ -188,8 +195,14 @@ class InteractiveMode():
         self.rpn = RPN()
 
     def run(self):
+        global showed_stack, show_full_stack
         while True:
-            print('\x1b[2m x: \x1b[0m' + self.prettify(self.rpn.stack['x']))
+            if not showed_stack:
+                if show_full_stack:
+                    self.rpn.exe('ls')
+                else:
+                    print('\x1b[2m x: \x1b[0m' + self.prettify(self.rpn.stack['x']))
+            showed_stack=False
             try:
                 ret = self.rpn.exe(input(' > '))
             except Exception as e:

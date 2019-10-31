@@ -31,6 +31,7 @@ Functions that pushes something into the stack.
 |---|---|---|
 |Quit|`q`, `quit`, `exit`|Quits the program|
 |Print|`print`, `ls`|Prints the stack|
+|Stack show|`ss`, `ts`|Toggles the option to print the full stack at the interactive prompt|
 
 ### Stack manipulation and memory
 
