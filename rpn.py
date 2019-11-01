@@ -10,6 +10,7 @@ showed_stack=False
 class Stack():
     def __init__(self):
         self.list = []
+        self.lastx = float(0)
     def push(self, item):
         if len(self.list) < 1 and item == 0:
             return
@@ -22,6 +23,7 @@ class Stack():
         return retval
     def drop(self, func):
         x = self.pop()
+        self.lastx = x
         y = self.pop()
         try:
             self.push(func(x, y))
@@ -30,6 +32,7 @@ class Stack():
             self.push(x)
             self.push(y)
     def change(self, func):
+        self.lastx = self.list[0]
         self.push(func(self.pop()))
     def __getitem__(self, key):
         if type(key) == slice: raise IndexError('No stack slicing')
@@ -181,7 +184,9 @@ class RPN():
                 self.stack.push(self.regtable[next(ln)])
             elif cmd in ['clr', 'clear', 'clean', 'erase']:
                 self.stack = Stack()
-
+            elif cmd in ['lastx', 'lx']:
+                last=self.stack.lastx
+                self.stack.push(last)
             elif cmd in '':
                 pass
             else:

@@ -41,7 +41,8 @@ Functions that pushes something into the stack.
 |Roll down|`rld`, `roll`, `rolld`, `rolldown`|Rolls the stack down|
 |Roll up|`rlu`, `rollu`, `rollup`|Rolls the stack up|
 |Store|`sto`, `store`|Takes one argument that sets the storage location|
-|Recall|`rcl`, `recall`|Pushes the numbes stored in a argument position|
+|Recall|`rcl`, `recall`|Pushes the numbers stored in an argument position|
+|Last X|`lastx`, `lx`|Pushes the value of the *x* buffer before the last calculation|
 
 ### Stack drop
 
