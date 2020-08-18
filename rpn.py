@@ -184,6 +184,10 @@ class RPN():
                 self.stack.push(self.regtable[next(ln)])
             elif cmd in ['clr', 'clear', 'clean', 'erase']:
                 self.stack = Stack()
+            elif cmd in ['dup']:
+                x=self.stack.pop()
+                self.stack.push(x)
+                self.stack.push(x)
             elif cmd in ['lastx', 'lx']:
                 last=self.stack.lastx
                 self.stack.push(last)
