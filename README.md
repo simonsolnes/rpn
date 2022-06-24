@@ -59,7 +59,7 @@ Functions that pops off the *x* and *y* buffers and pushes the product based on 
 |Greatest common divider|`gcd`||
 |Logarithm|`log`, `logarithm`|The *x* buffer is the base|
 |Root|`r`, `root`|The *x* buffer is the root|
-|Root|`pct`|Percent change from *x* to *y*: (y-x)/x|
+|Percent change|`pct`|Percent change from *x* to *y*: (y-x)/x|
 
 ### *x* buffer change
 
