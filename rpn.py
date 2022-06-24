@@ -112,6 +112,8 @@ class RPN():
                 self.stack.drop(lambda x, y: math.log(y, x))
             elif cmd in ['r', 'root']:
                 self.stack.drop(lambda x, y: math.pow(y, 1/x))
+            elif cmd in ['pct']:
+                self.stack.drop(lambda x, y: (y-x)/x)
 
             # change
             elif cmd in ['cel', 'ceil']:
