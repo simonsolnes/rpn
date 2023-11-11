@@ -4,9 +4,13 @@ import math
 import sys
 import random
 
+show_full_stack=False
+showed_stack=False
+
 class Stack():
     def __init__(self):
         self.list = []
+        self.lastx = float(0)
     def push(self, item):
         if len(self.list) < 1 and item == 0:
             return
@@ -19,6 +23,7 @@ class Stack():
         return retval
     def drop(self, func):
         x = self.pop()
+        self.lastx = x
         y = self.pop()
         try:
             self.push(func(x, y))
@@ -27,6 +32,7 @@ class Stack():
             self.push(x)
             self.push(y)
     def change(self, func):
+        self.lastx = self.list[0]
         self.push(func(self.pop()))
     def __getitem__(self, key):
         if type(key) == slice: raise IndexError('No stack slicing')
@@ -81,6 +87,7 @@ class RPN():
         self.angle = 'deg'
 
     def exe(self, raw):
+        global showed_stack, show_full_stack
         ln = iter(raw.split(' '))
         for cmd in ln:
             if re.search('^-?(\d+\.?\d*|\.\d+)$', cmd):
@@ -105,6 +112,8 @@ class RPN():
                 self.stack.drop(lambda x, y: math.log(y, x))
             elif cmd in ['r', 'root']:
                 self.stack.drop(lambda x, y: math.pow(y, 1/x))
+            elif cmd in ['pct']:
+                self.stack.drop(lambda x, y: (y-x)/x)
 
             # change
             elif cmd in ['cel', 'ceil']:
@@ -160,22 +169,31 @@ class RPN():
             elif cmd in ['print', 'ls']:
                 for item in self.stack.gettable():
                     print(item[0] + ': ' + InteractiveMode().prettify(item[1]))
+                    showed_stack=1
+            elif cmd in ['ss', 'ts']:
+                show_full_stack = not show_full_stack
 
             # functions
-            elif cmd == ['swp', '<>', '><', 'swap']:
+            elif cmd in ['swp', '<>', '><', 'swap']:
                 self.stack['x'], self.stack['y'] = self.stack['y'], self.stack['x']
             elif cmd in ['rld', 'roll', 'rolld', 'rolldown']:
                 self.stack.roll()
             elif cmd in ['rlu', 'rollu', 'rollup']:
                 self.stack.roll(1)
-            elif cmd == ['sto', 'store']:
+            elif cmd in ['sto', 'store']:
                 self.regtable[next(ln)] = self.stack['x']
-            elif cmd == ['rcl', 'recall']:
+            elif cmd in ['rcl', 'recall']:
                 self.stack.push(self.regtable[next(ln)])
             elif cmd in ['clr', 'clear', 'clean', 'erase']:
                 self.stack = Stack()
-
-            elif cmd == '':
+            elif cmd in ['dup']:
+                x=self.stack.pop()
+                self.stack.push(x)
+                self.stack.push(x)
+            elif cmd in ['lastx', 'lx']:
+                last=self.stack.lastx
+                self.stack.push(last)
+            elif cmd in '':
                 pass
             else:
                 
@@ -188,8 +206,14 @@ class InteractiveMode():
         self.rpn = RPN()
 
     def run(self):
+        global showed_stack, show_full_stack
         while True:
-            print('\x1b[2m x: \x1b[0m' + self.prettify(self.rpn.stack['x']))
+            if not showed_stack:
+                if show_full_stack:
+                    self.rpn.exe('ls')
+                else:
+                    print('\x1b[2m x: \x1b[0m' + self.prettify(self.rpn.stack['x']))
+            showed_stack=False
             try:
                 ret = self.rpn.exe(input(' > '))
             except Exception as e:

@@ -16,7 +16,7 @@ The program takes inputs that are separated by space (or return in interactive m
 
 ### Stack pushes
 
-Funcions that pushes something into the stack.
+Functions that pushes something into the stack.
 
 |Operation|Syntax|Description|
 |---|---|---|
@@ -25,12 +25,13 @@ Funcions that pushes something into the stack.
 |π|`pi`||
 |Euler's number|`e`||
 
-### System funcions
+### System functions
 
 |Operation|Syntax|Description|
 |---|---|---|
 |Quit|`q`, `quit`, `exit`|Quits the program|
 |Print|`print`, `ls`|Prints the stack|
+|Stack show|`ss`, `ts`|Toggles the option to print the full stack at the interactive prompt|
 
 ### Stack manipulation and memory
 
@@ -40,7 +41,8 @@ Funcions that pushes something into the stack.
 |Roll down|`rld`, `roll`, `rolld`, `rolldown`|Rolls the stack down|
 |Roll up|`rlu`, `rollu`, `rollup`|Rolls the stack up|
 |Store|`sto`, `store`|Takes one argument that sets the storage location|
-|Recall|`rcl`, `recall`|Pushes the numbes stored in a argument position|
+|Recall|`rcl`, `recall`|Pushes the numbers stored in an argument position|
+|Last X|`lastx`, `lx`|Pushes the value of the *x* buffer before the last calculation|
 
 ### Stack drop
 
@@ -50,23 +52,24 @@ Functions that pops off the *x* and *y* buffers and pushes the product based on 
 |---|---|---|
 |Add|`a`, `+`, `add`, `plus`||
 |Subtract|`s`, `-`, `sub`, `subtact`, `minus`|
-|Muliply|`m`, `*`, `mul`, `multiply`, `times`||
+|Multiply|`m`, `*`, `mul`, `multiply`, `times`||
 |Divide|`d`, `/`, `:`, `div`, `divide`, `over`||
 |Power|`p`, `^`, `**`, `pow`, `raised`, `expo`, `exponent`||
 |Modulus|`mod`, `modulus`||
 |Greatest common divider|`gcd`||
 |Logarithm|`log`, `logarithm`|The *x* buffer is the base|
 |Root|`r`, `root`|The *x* buffer is the root|
+|Percent change|`pct`|Percent change from *x* to *y*: (y-x)/x|
 
 ### *x* buffer change
 
-Funcions that takes what is stored in the *x* buffer and changes it. Trigonometric funcions returns number in radians.
+Functions that takes what is stored in the *x* buffer and changes it. Trigonometric functions returns number in radians.
 
 |Operation|Syntax|Description|
 |---|---|---|
 |Ceil|`cel`, `ceil`||
 |Floor|`flr`,`floor`||
-|Round|`rnd`, `round`|Rounds to nearest ingeger|
+|Round|`rnd`, `round`|Rounds to nearest integer|
 |Invert|`inv`, `inverse`, `invert`|1 / x|
 |Absolute value|`abs`, `absolute`||
 |Factorial|`fac`, `factorial`||
